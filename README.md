@@ -2,7 +2,7 @@
 ======
 
 ## To Submit this Assignment
-  * create a new branch off of the branch that you created yesterday (lab-16)
+  * create a new branch off of the branch that you created yesterday (lab-17)
   * write all of your code in a directory named `lab-` + `<your name>` **e.g.** `lab-brian`
   * push to your repository
   * submit a pull request to this repository
