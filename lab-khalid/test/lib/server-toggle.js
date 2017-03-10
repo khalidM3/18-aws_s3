@@ -23,6 +23,7 @@ exports.serverOff = function(server, done){
       if(err) return done(err);
       server.isRunning = false;
       debug('server down');
+      done();
     });
     return;
   }

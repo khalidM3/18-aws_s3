@@ -37,11 +37,6 @@ const
 describe('pic routes ', function(){
   before( done => {
     serverToggle.serverOn(server, done);
-    done();
-  });
-
-  after( done => {
-    serverToggle.serverOff(server, done);
   });
 
   afterEach( done => {
@@ -53,18 +48,25 @@ describe('pic routes ', function(){
     .then (() => done())
     .catch(done);
   });
+
+  after( done => {
+    serverToggle.serverOff(server, done);
+  });
   describe('POST /api/gallery/:galleryID/pic', function(){
     describe('with a valid token and valid data', function(){
       before(done => {
+        console.log('\n ************\n');
         new User(exampleUser)
         .genPasswordHash(exampleUser.password)
         .then(user => user.save())
         .then( user => {
+          console.log(user);
           this.tempUser = user;
           return user.genToken();
         })
         .then(token => {
           this.tempToken = token;
+          console.log('\n token \n', token);
           done();
         })
         .catch(done);
@@ -74,24 +76,28 @@ describe('pic routes ', function(){
         exampleGallery.userID = this.tempUser._id.toString();
         new Gallery(exampleGallery).save()
         .then( gallery => {
+          console.log(gallery, '--------> gallery');
           this.tempGallery = gallery;
           done();
         })
         .catch(done);
       });
+
       after( done => {
         delete exampleGallery.userID;
         done();
       });
 
       it('should return a pic', done => {
+        expect(true).to.be.true;
+        done();
         request.post(`${url}/api/gallery/${this.tempGallery._id}/pic`)
         .set({
           Authorization: `Bearer ${this.tempToken}`
         })
         .field('name', examplePic.name)
         .field('desc', examplePic.desc)
-        .field('image', examplePic.image)
+        .attach('image', examplePic.image)
         .end((err,res) => {
           if(err) return done(err);
           expect(res.body.name).to.equal(examplePic.name);
