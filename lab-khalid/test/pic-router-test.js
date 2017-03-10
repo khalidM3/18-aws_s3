@@ -1,5 +1,7 @@
 'use strict';
 
+require('./lib/test-env.js');
+
 const
   expect = require('chai').expect,
   request = require('superagent'),
@@ -9,6 +11,8 @@ const
   Pic = require('../model/pic.js'),
   User = require('../model/user.js'),
   Gallery = require('../model/gallery.js'),
+
+  awsMocks = require('./lib/aws-mocks.js'),
 
   serverToggle = require('./lib/server-toggle.js'),
   server = require('../server.js'),
@@ -32,6 +36,14 @@ const
     name: 'examplePic',
     desc: 'example pic description',
     image: `${__dirname}/data/tester.png`
+  },
+
+  examplePicModel = {
+    name: 'example pic model',
+    desc: 'example pic model description',
+    imageURI: awsMocks.uploadMock.Location,
+    filename: awsMocks.uploadMock.Key,
+    created: new Date()
   };
 
 describe('pic routes ', function(){
@@ -100,9 +112,11 @@ describe('pic routes ', function(){
         .attach('image', examplePic.image)
         .end((err,res) => {
           if(err) return done(err);
+          console.log(awsMocks.uploadMock.Location);
           expect(res.body.name).to.equal(examplePic.name);
           expect(res.body.desc).to.equal(examplePic.desc);
           expect(res.body.galleryID).to.equal(this.tempGallery._id.toString());
+          expect(res.body.imageURI).to.equal(awsMocks.uploadMock.Location);
           done();
         });
       });
