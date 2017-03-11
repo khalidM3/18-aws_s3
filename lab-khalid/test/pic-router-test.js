@@ -36,19 +36,23 @@ const
     name: 'examplePic',
     desc: 'example pic description',
     image: `${__dirname}/data/tester.png`
-  },
-
-  examplePicModel = {
-    name: 'example pic model',
-    desc: 'example pic model description',
-    imageURI: awsMocks.uploadMock.Location,
-    filename: awsMocks.uploadMock.Key,
-    created: new Date()
   };
+
+  // examplePicModel = {
+  //   name: 'example pic model',
+  //   desc: 'example pic model description',
+  //   imageURI: awsMocks.uploadMock.Location,
+  //   filename: awsMocks.uploadMock.Key,
+  //   created: new Date()
+  // };
 
 describe('pic routes ', function(){
   before( done => {
     serverToggle.serverOn(server, done);
+  });
+
+  after( done => {
+    serverToggle.serverOff(server, done);
   });
 
   afterEach( done => {
@@ -61,9 +65,6 @@ describe('pic routes ', function(){
     .catch(done);
   });
 
-  after( done => {
-    serverToggle.serverOff(server, done);
-  });
   describe('POST /api/gallery/:galleryID/pic', function(){
     describe('with a valid token and valid data', function(){
       before(done => {
@@ -101,8 +102,7 @@ describe('pic routes ', function(){
       });
 
       it('should return a pic', done => {
-        expect(true).to.be.true;
-        done();
+        console.log('<<<<<<<<<<< GOT HERE? >>>>>>>>>.>>>');
         request.post(`${url}/api/gallery/${this.tempGallery._id}/pic`)
         .set({
           Authorization: `Bearer ${this.tempToken}`
